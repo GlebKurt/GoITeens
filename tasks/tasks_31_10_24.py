@@ -70,11 +70,11 @@
 # print(f"There are {count} positive numbers")
 
 #8
-a = int(input("Enter number a: "))
-b = int(input("Enter number b: "))
-c = int(input("Enter number c: "))
+# a = int(input("Enter number a: "))
+# b = int(input("Enter number b: "))
+# c = int(input("Enter number c: "))
 
-count_positive = (a > 0) + (b > 0) + (c > 0)
-count_negative = (a < 0) + (b < 0) + (c < 0)
+# count_positive = (a > 0) + (b > 0) + (c > 0)
+# count_negative = (a < 0) + (b < 0) + (c < 0)
 
-print(f"There are {count_positive} positive numbers, and {count_negative} negative numbers.")
+# print(f"There are {count_positive} positive numbers, and {count_negative} negative numbers.")
