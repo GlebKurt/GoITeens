@@ -1,10 +1,12 @@
 start_btn = input("Press power button to start PC (START)")
 
-def start_btn():
-    if start_btn == START:
-        Print("///")
+trying_to_start = True
+
+while trying_to_start:
+    if start_btn == "START":
+        print("///")
         # starting_pc()
+        trying_to_start = False
     else:
         print("You missed the button, stupid fool!")
         start_btn = input("Press power button to start PC (START)")
-        start_btn()
