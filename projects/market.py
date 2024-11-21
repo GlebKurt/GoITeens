@@ -1,7 +1,6 @@
 all_products = ['Apple','Banana', 'Pineapple', 'Milk', 'Juice']
 sales_history = []
 
-
 def add_product():
     while True:
         add_new = input("Введіть який продукт ви хочете додати:  (S - стоп)")
