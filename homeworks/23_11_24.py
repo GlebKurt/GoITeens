@@ -10,9 +10,9 @@
 # 4
 # data = []
 
-# data1 = ['Андрій', '16', 'Ukraine']
-# data2 = ['Sasha', '13', 'Ukraine']
-# data3 = ['Андрій', '22', 'Ukraine']
+# data1 = ['Андрій', 'Tkachuk']
+# data2 = ['Sasha', 'Dolenko']
+# data3 = ['Андрій', 'Melnik']
 
 # data.extend(data1)
 # data.extend(data2)
