@@ -1,18 +1,20 @@
-all_products = ['Apple','Banana', 'Pineapple', 'Milk', 'Juice']
+all_products = ['Apple', 'Banana', 'Pineapple', 'Milk', 'Juice']
 sales_history = []
+
 
 def add_product():
     while True:
         add_new = input("Введіть який продукт ви хочете додати:  (S - стоп)")
 
         if add_new == "S":
-                    break
+            break
         elif add_new not in all_products:
             all_products.append(add_new)
             print(f"Новий список: {all_products}")
-        
+
         else:
             print("Введене не коректне значення або продукт вже існує!")
+
 
 def replace_product():
     while True:
@@ -32,7 +34,7 @@ def replace_product():
 
                     all_products.insert(replace_index, insert)
                     print(f"Новий список: {all_products}")
-                    
+
                 else:
                     print("Введене не коректне значення або продукту немає в списку!")
         elif replace == "S":
@@ -40,6 +42,7 @@ def replace_product():
 
         else:
             print("Введене не коректне значення або продукту немає в списку!")
+
 
 def delete_product():
     while True:
@@ -65,7 +68,10 @@ print("------------------------------------------------------")
 print("------------------------------------------------------\n\n")
 
 while True:
-    choice = input("Що ви бажаєте зробити?\n1 - перевірити список продуктів в наявності\n2 - додати продукт\n3 - видалити/позначити проданим продукт\n4 - замінити наявний продукт новим\n5 - перевірити історію продажів\n6 - вихід\n")
+    choice = input(
+        "Що ви бажаєте зробити?\n1 - перевірити список продуктів в наявності\n2 - додати продукт\n3 - "
+        "видалити/позначити проданим продукт\n4 - замінити наявний продукт новим\n5 - перевірити історію продажів\n6 "
+        "- вихід\n")
 
     if choice == "1":
         print(all_products)
@@ -79,3 +85,4 @@ while True:
         print(sales_history)
     elif choice == "6":
         break
+        
