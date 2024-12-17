@@ -26,7 +26,7 @@ draws = 0
 
 
 def write_in_file():
-    with open("data.txt", "a") as file:
+    with open("logs.txt", "a") as file:
         file.write(f'[{current_time}] Wins X: {x_wins}. Wins O: {o_wins}. Draws: {draws}.   Gamemode: {"PvP" if gamemode_1 == True else "PvC"} Player: {figure}\n')
 
 
