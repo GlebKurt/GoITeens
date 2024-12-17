@@ -78,12 +78,15 @@ def pc_move():
     for i in range(3):
         if cells_1[i] == cells_2[i] == pc_figure and cells_3[i] == " ":
             cells_3[i] = pc_figure
+            print("1")
             return
         elif cells_2[i] == cells_3[i] == pc_figure and cells_1[i] == " ":
             cells_1[i] = pc_figure
+            print("2")
             return
         elif cells_1[i] == cells_3[i] == pc_figure and cells_2[i] == " ":
             cells_2[i] = pc_figure
+            print("3")
             return
 
     while True:
