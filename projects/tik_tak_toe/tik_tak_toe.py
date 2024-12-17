@@ -1,5 +1,7 @@
 import time
+from os import write
 from random import randint
+from datetime import datetime  # Знайшов в інтернеті. Для того щоб зберігати дату і час у файл з данними, бо так прикольно виглядає, наче професійна програма)
 
 cells_1 = [" ", " ", " "]
 cells_2 = [" ", " ", " "]
@@ -12,14 +14,21 @@ win = False
 gamemode_1 = False
 gamemode_2 = False
 is_pc_move = False
-pc_figure = None
 
 player_now = "X"
 choice = None
+pc_figure = None
+
+current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Допомагав ChatGPT, але писав сам
 
 x_wins = 0
 o_wins = 0
 draws = 0
+
+
+def write_in_file():
+    with open("data.txt", "a") as file:
+        file.write(f'[{current_time}] Wins X: {x_wins}. Wins O: {o_wins}. Draws: {draws}.   Gamemode: {"PvP" if gamemode_1 == True else "PvC"} Player: {figure}\n')
 
 
 def render_field():
@@ -67,17 +76,35 @@ def check_win():
 
 
 def pc_move():
+    for i in range(3):
+        if cells_1[i] == cells_2[i] == " " and cells_3[i] == pc_figure:
+            cells_3[i] = pc_figure
+            print("1")
+            return
+
+        elif cells_2[i] == cells_3[i] == " " and cells_1[i] == pc_figure:
+            cells_1[i] = pc_figure
+            print("2")
+            return
+        elif cells_1[i] == cells_3[i] == " " and cells_2[i] == pc_figure:
+            cells_2[i] = pc_figure
+            print("3")
+            return
+
     while True:
         choice = randint(1, 9)
 
         if choice in range(1, 4) and cells_1[choice - 1] == " ":
             cells_1[choice - 1] = pc_figure
+            print("Random 1")
             return
         elif choice in range(4, 7) and cells_2[choice - 4] == " ":
             cells_2[choice - 4] = pc_figure
+            print("Random 2")
             return
         elif choice in range(7, 10) and cells_3[choice - 7] == " ":
             cells_3[choice - 7] = pc_figure
+            print("Random 3")
             return
 
 
@@ -91,7 +118,6 @@ while True:
     if win: break
 
     game_running = True
-    player_now = "X"
 
     while True:
         gamemode = input("Виберіть режим гри:\nВдвох - 1\nЗ комп'ютером - 2\n")
@@ -110,16 +136,22 @@ while True:
             render_field()
             while True:
                 time.sleep(1)
-                choice = int(input(f"Зараз ходить {player_now}!\nВиберіть клітину (1-9): \n"))
+                while True:
+                    choice = int(input(f"Зараз ходить {player_now}!\nВиберіть клітину (1-9): \n"))
 
-                if choice in range(1, 4) and cells_1[choice - 1] == " ":
-                    cells_1[choice - 1] = player_now
-                elif choice in range(4, 7) and cells_2[choice - 4] == " ":
-                    cells_2[choice - 4] = player_now
-                elif choice in range(7, 10) and cells_3[choice - 7] == " ":
-                    cells_3[choice - 7] = player_now
-                else:
-                    print("\nЦя клітина вже зайнята, виберіть іншу.\n")
+                    if choice in range(1, 4) and cells_1[choice - 1] == " ":
+                        cells_1[choice - 1] = player_now
+                        break
+                    elif choice in range(4, 7) and cells_2[choice - 4] == " ":
+                        cells_2[choice - 4] = player_now
+                        break
+                    elif choice in range(7, 10) and cells_3[choice - 7] == " ":
+                        cells_3[choice - 7] = player_now
+                        break
+                    else:
+                        print("\nЦя клітина вже зайнята, виберіть іншу.\n")
+
+                    render_field()
 
                 render_field()
                 check_win()
@@ -169,7 +201,7 @@ while True:
                         print("\nЦя клітина вже зайнята, виберіть іншу.\n")
                         continue
                 elif player_now == pc_figure:
-                    print("Зараз ходить О (комп'ютер)!")
+                    print(f"Зараз ходить {pc_figure} (комп'ютер)!")
                     pc_move()
 
                 render_field()
@@ -197,4 +229,5 @@ while True:
                 draws += 1
 
         print(f"Статистика гри:\nВиграшів Х: {x_wins}\nВиграшів О: {o_wins}\nНічий: {draws}")
+        write_in_file()
         break
