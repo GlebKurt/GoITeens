@@ -1,5 +1,4 @@
 import time
-from os import write
 from random import randint
 from datetime import datetime  # Знайшов в інтернеті. Для того щоб зберігати дату і час у файл з данними, бо так прикольно виглядає, наче професійна програма)
 
