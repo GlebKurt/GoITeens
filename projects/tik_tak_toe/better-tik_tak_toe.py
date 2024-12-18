@@ -53,7 +53,7 @@ draws = 0
 # def write_in_file():
 #     with open("logs.txt", "a") as file:
 #         file.write(
-#             f'[{current_time}] Wins X: {x_wins}. Wins O: {o_wins}. Draws: {draws}.   Gamemode: {"PvP" if gamemode_1 == True else "PvC"} Player: {figure}\n')
+#             f'[{current_time}] Wins X: {x_wins}. Wins O: {o_wins}. Draws: {draws}.   Gamemode: {"PvP" if gamemode_1 == True else "PvC    Player: {figure}"}\n')
 
 
 def render_field():
@@ -102,7 +102,8 @@ def check_win():
 
 def player_move():
     while True:
-        choice = int(input(f"Зараз ходить {player_now}!\nВиберіть клітину {"(NumPad 7-3)" if numpad == True else "(1-9)"}: \n"))
+        choice = int(
+            input(f"Зараз ходить {player_now}!\nВиберіть клітину {"(NumPad 7-3)" if numpad == True else "(1-9)"}: \n"))
 
         if numpad:
             if cells[f"num{choice}"][0] == " ":
@@ -142,3 +143,41 @@ def pc_move():
             cells[f"num{choice}"][0] = pc_figure
             print("Random")
             return
+
+
+while True:
+    print("Вітаю в грі \"Хрестики нулики\"!")
+    sleep(1)
+    print(f"\nВ грі можна грати з комп'ютером або вдвох.\n\nПравила прості:\nВи вводите номер клітини в яку хочете "
+          f"поставити свою фігуру (1 - 9 або 7 - 3)")
+    input("Натисніть Enter щоб продовжити...")
+
+    numpad = input("Виберіть режим:\n1 - NumPad\n2 - Числовий рядок\n")
+    numpad = True if numpad == '1' else False if numpad == '2' else None
+    while numpad is None:
+        numpad = input("Невірний вибір! Будь ласка, введіть 1 або 2.")
+        numpad = True if numpad == '1' else False if numpad == '2' else None
+    sleep(1)
+
+    gamemode = input("Виберіть режим гри:\nВдвох - 1\nЗ комп'ютером - 2\n")
+    gamemode = 1 if gamemode == '1' else 2 if gamemode == '2' else None
+    while gamemode is None:
+        gamemode = input("Невірний вибір! Будь ласка, введіть 1 або 2.")
+        gamemode = 1 if gamemode == '1' else 2 if gamemode == '2' else None
+    sleep(1)
+
+    while gamemode == 1:
+        render_field()
+        player_move()
+        check_win()
+        if win:
+            choice = input("Ви бажаєте зіграти ще раз?").lower()
+            if choice == "так":
+                cells_1 = [" ", " ", " "]
+                cells_2 = [" ", " ", " "]
+                cells_3 = [" ", " ", " "]
+                win = False
+                continue
+            else:
+                gamemode = 0
+        change_player()
