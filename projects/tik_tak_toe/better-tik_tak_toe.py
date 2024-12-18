@@ -50,13 +50,14 @@ o_wins = 0
 draws = 0
 
 
-# def write_in_file():
-#     with open("logs.txt", "a") as file:
-#         file.write(
-#             f'[{current_time}] Wins X: {x_wins}. Wins O: {o_wins}. Draws: {draws}.   Gamemode: {"PvP" if gamemode_1 == True else "PvC    Player: {figure}"}\n')
+def write_in_file():
+    with open("logs.txt", "a") as file:
+        file.write(
+            f'[{current_time}] Wins X: {x_wins}. Wins O: {o_wins}. Draws: {draws}.   Gamemode: {"PvP" if gamemode_1 == True else "PvC    Player: {figure}"}\n')
 
 
 def render_field():
+    print("Rendering field")
     print(f"{cells['num7'][0]} | {cells['num8'][0]} | {cells['num9'][0]}")
     print("---------")
     print(f"{cells['num4'][0]} | {cells['num5'][0]} | {cells['num6'][0]}")
@@ -65,6 +66,7 @@ def render_field():
 
 
 def change_player():
+    print("Changing player")
     global player_now
     if player_now == "X":
         player_now = "O"
@@ -73,34 +75,37 @@ def change_player():
 
 
 def check_win():
+    print("Checking win")
     global player_now, win
     winning_combinations = [
-        [cells["num7"], cells["num8"], cells["num9"]],  # X
-        [cells["num7"], cells["num8"], cells["num9"]],
-        [cells["num7"], cells["num8"], cells["num9"]],
+        [cells["num7"], cells["num8"], cells["num9"]],  # Top row
+        [cells["num4"], cells["num5"], cells["num6"]],  # Middle row
+        [cells["num1"], cells["num2"], cells["num3"]],  # Bottom row
 
-        [cells["num7"], cells["num4"], cells["num1"]],  # Y
-        [cells["num8"], cells["num5"], cells["num2"]],
-        [cells["num9"], cells["num6"], cells["num3"]],
+        [cells["num7"], cells["num4"], cells["num1"]],  # Left column
+        [cells["num8"], cells["num5"], cells["num2"]],  # Middle column
+        [cells["num9"], cells["num6"], cells["num3"]],  # Right column
 
         [cells["num7"], cells["num5"], cells["num3"]],  # Diagonal
-        [cells["num9"], cells["num5"], cells["num1"]]
+        [cells["num9"], cells["num5"], cells["num1"]]   # Diagonal
     ]
 
     for combination in winning_combinations:
-        if combination[0] == combination[1] == combination[2] == player_now:
+        if combination[0][0] == combination[1][0] == combination[2][0] == player_now:
             stats.append(player_now)
             print(f"{player_now} виграв!")
             win = True
             return
 
-    if all(cell != " " for row in [cells] for cell in row):
+    if all(cell[0] != " " for cell in cells.values()):
         stats.append("draw")
-        print(f"Нічия!")
+        print("Нічия!")
         win = True
 
 
+
 def player_move():
+    print("Moving player")
     while True:
         choice = int(
             input(f"Зараз ходить {player_now}!\nВиберіть клітину {"(NumPad 7-3)" if numpad == True else "(1-9)"}: \n"))
@@ -122,6 +127,7 @@ def player_move():
 
 
 def pc_move():
+    print("Moving pc")
     for i in range(1, 4):
         if cells[f"num{i}"][0] == cells[f"num{i + 3}"][0] == pc_figure and cells[f"num{i + 6}"][0] == " ":
             cells[f"num{i + 6}"] = pc_figure
@@ -173,9 +179,7 @@ while True:
         if win:
             choice = input("Ви бажаєте зіграти ще раз?").lower()
             if choice == "так":
-                cells_1 = [" ", " ", " "]
-                cells_2 = [" ", " ", " "]
-                cells_3 = [" ", " ", " "]
+                cells = {key: [" ", value[1]] for key, value in cells.items()}  # Так зробити мені підказав ChatGPT
                 win = False
                 continue
             else:
