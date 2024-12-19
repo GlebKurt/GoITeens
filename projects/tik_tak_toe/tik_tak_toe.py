@@ -1,6 +1,6 @@
 import time
 from random import randint
-from datetime import datetime  # Знайшов в інтернеті. Для того щоб зберігати дату і час у файл з данними, бо так прикольно виглядає, наче професійна програма)
+from datetime import datetime  # Знайшов в інтернеті. Для того щоб зберігати дату і час у файл з логами, бо так прикольно виглядає, наче професійна програма)
 
 cells_1 = [" ", " ", " "]
 cells_2 = [" ", " ", " "]
@@ -27,7 +27,7 @@ draws = 0
 
 def write_in_file():
     with open("logs.txt", "a") as file:
-        file.write(f'[{current_time}] Wins X: {x_wins}. Wins O: {o_wins}. Draws: {draws}.   Gamemode: {"PvP" if gamemode_1 == True else "PvC"} Player: {figure}\n')
+        file.write(f'[{current_time}] Wins X: {x_wins}. Wins O: {o_wins}. Draws: {draws}.   Gamemode: {"PvP" if gamemode_1 == True else "PvC."   "Player": {figure}}\n')
 
 
 def render_field():
