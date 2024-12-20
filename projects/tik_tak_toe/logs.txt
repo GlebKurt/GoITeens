@@ -1,10 +1,15 @@
 [2024-12-17 15:25:31] Wins X: 1. Wins O: 0. Draws: 0.   Gamemode: PvP
 [2024-12-17 15:26:09] Wins X: 1. Wins O: 0. Draws: 0.   Gamemode: PvC
 [2024-12-17 15:44:43] Wins X: 0. Wins O: 1. Draws: 0.   Gamemode: PvC
-[2024-12-17 15:49:05] Wins X: 1. Wins O: 0. Draws: 0.   Gamemode: PvC Player: X
-[2024-12-17 15:51:51] Wins X: 0. Wins O: 0. Draws: 1.   Gamemode: PvC Player: O
-[2024-12-17 17:09:52] Wins X: 1. Wins O: 0. Draws: 0.   Gamemode: PvC Player: X
-[2024-12-17 17:39:25] Wins X: 1. Wins O: 1. Draws: 0.   Gamemode: PvC Player: X
+[2024-12-17 15:49:05] Wins X: 1. Wins O: 0. Draws: 0.   Gamemode: PvC     Player: X
+[2024-12-17 15:51:51] Wins X: 0. Wins O: 0. Draws: 1.   Gamemode: PvC     Player: O
+[2024-12-17 17:09:52] Wins X: 1. Wins O: 0. Draws: 0.   Gamemode: PvC     Player: X
+[2024-12-17 17:39:25] Wins X: 1. Wins O: 1. Draws: 0.   Gamemode: PvC     Player: X
 [2024-12-19 15:48:56] Wins X: 1. Wins O: 0. Draws: 0.   Gamemode: PvP
 [2024-12-19 16:16:40] Wins X: 1. Wins O: 0. Draws: 0.   Gamemode: PvP
-[2024-12-19 16:18:10] Wins X: 1. Wins O: 0. Draws: 0.   Gamemode: PvC    Player: X
+[2024-12-19 16:18:10] Wins X: 1. Wins O: 0. Draws: 0.   Gamemode: PvC     Player: X
+[2024-12-19 16:24:29] Wins X: 1. Wins O: 0. Draws: 0.   Gamemode: PvC     Player: X
+[2024-12-20 11:34:13] Wins X: 1. Wins O: 1. Draws: 0.   Gamemode: PvC.    Player: X
+[2024-12-20 11:37:16] Wins X: 2. Wins O: 0. Draws: 0.   Gamemode: PvC.    Player: X
+[2024-12-20 11:48:17] Wins X: 0. Wins O: 1. Draws: 0.   Gamemode: PvP
+[2024-12-20 12:07:14] Wins X: 2. Wins O: 0. Draws: 0.   Gamemode: PvC.    Player: X

@@ -16,8 +16,6 @@ cells = {
     "num3": [" ", 3]
 }
 
-
-
 stats = []
 
 game_running = False
@@ -25,6 +23,7 @@ win = False
 gamemode_1 = False
 gamemode_2 = False
 is_pc_move = False
+pc_moved = False
 
 player_now = "X"
 choice = None
@@ -41,16 +40,18 @@ draws = 0
 
 def write_in_file():
     with open("logs.txt", "a") as file:
-        file.write(f'[{current_time}] Wins X: {x_wins}. Wins O: {o_wins}. Draws: {draws}.   Gamemode: {"PvP" if gamemode == "end_1" else f"PvC    Player: {figure}"}\n')
+        file.write(f'[{current_time}] Wins X: {x_wins}. Wins O: {o_wins}. Draws: {draws}.   Gamemode: {"PvP" if gamemode == "end_1" else f"PvC.    Player: {figure}"}\n')
 
 
 def render_field():
     print("Rendering field")
-    print(f"{cells['num7'][0]} | {cells['num8'][0]} | {cells['num9'][0]}")
-    print("---------")
-    print(f"{cells['num4'][0]} | {cells['num5'][0]} | {cells['num6'][0]}")
-    print("---------")
-    print(f"{cells['num1'][0]} | {cells['num2'][0]} | {cells['num3'][0]}\n")
+    print(f" {cells['num7'][0]} | {cells['num8'][0]} | {cells['num9'][0]} ")
+    print("___|___|___")
+    print(f" {cells['num4'][0]} | {cells['num5'][0]} | {cells['num6'][0]} ")
+    print("___|___|___")
+    print(f" {cells['num1'][0]} | {cells['num2'][0]} | {cells['num3'][0]} ")
+    print("   |   |   \n")
+
 
 
 def change_player():
@@ -83,7 +84,6 @@ def check_win():
             stats.append(player_now)
             print(f"{player_now} виграв!")
             win = True
-            return
 
     if all(cell[0] != " " for cell in cells.values()):
         stats.append("draw")
@@ -96,7 +96,7 @@ def check_win():
             cells = {key: [" ", value[1]] for key, value in cells.items()}  # Так зробити мені підказав ChatGPT
             win = False
         else:
-            gamemode = "end_1" if gamemode == 1 else "end_2"
+            gamemode = "end_1" if gamemode == "1" else "end_2"
 
 
 def player_move():
@@ -120,29 +120,111 @@ def player_move():
             print("Невірний вибір! Виберіть число від 1 до 9.")
 
 
-def pc_move():
-    print("Moving pc")
+def check_pc_move():
+    global pc_moved
     for i in range(1, 4):
-        if cells[f"num{i}"][0] == cells[f"num{i + 3}"][0] == pc_figure and cells[f"num{i + 6}"][0] == " ":
+        # Moves
+        if cells[f"num{i}"][0] == cells[f"num{i + 3}"][0] == pc_figure and cells[f"num{i + 6}"][0] == " ":  # Vertical
             cells[f"num{i + 6}"][0] = pc_figure
-            print(1)
+            print("Move 1")
+            pc_moved = True
             return
         elif cells[f"num{i + 3}"][0] == cells[f"num{i + 6}"][0] == pc_figure and cells[f"num{i}"][0] == " ":
             cells[f"num{i}"][0] = pc_figure
-            print(2)
+            print("Move 2")
+            pc_moved = True
             return
         elif cells[f"num{i}"][0] == cells[f"num{i + 6}"][0] == pc_figure and cells[f"num{i + 3}"][0] == " ":
             cells[f"num{i}"][0] = pc_figure
-            print(3)
+            print("Move 3")
+            pc_moved = True
             return
 
-    while True:
-        choice = randint(1, 9)
-
-        if cells[f"num{choice}"][0] == " ":
-            cells[f"num{choice}"][0] = pc_figure
-            print("Random")
+        elif cells[f"num{i}"][0] == cells[f"num{i + 2}"][0] == pc_figure and cells[f"num{i + 5}"][0] == " ":   # Horizontal
+            cells[f"num{i + 6}"][0] = pc_figure
+            print("Move 4")
+            pc_moved = True
             return
+        elif cells[f"num{i + 2}"][0] == cells[f"num{i + 5}"][0] == pc_figure and cells[f"num{i}"][0] == " ":
+            cells[f"num{i}"][0] = pc_figure
+            print("Move 5")
+            pc_moved = True
+            return
+        elif cells[f"num{i}"][0] == cells[f"num{i + 5}"][0] == pc_figure and cells[f"num{i + 2}"][0] == " ":
+            cells[f"num{i}"][0] = pc_figure
+            print("Move 6")
+            pc_moved = True
+            return
+
+        elif cells[f"num{i}"][0] == cells[f"num{i + 4}"][0] == pc_figure and cells[f"num{i + 7}"][0] == " ":   # Diagonal
+            cells[f"num{i + 6}"][0] = pc_figure
+            print("Move 7")
+            pc_moved = True
+            return
+        elif cells[f"num{i + 2}"][0] == cells[f"num{i + 4}"][0] == pc_figure and cells[f"num{i}"][0] == " ":
+            cells[f"num{i}"][0] = pc_figure
+            print("Move 8")
+            pc_moved = True
+            return
+
+        # Blocks
+        elif cells[f"num{i}"][0] == cells[f"num{i + 3}"][0] == figure and cells[f"num{i + 6}"][0] == " ":  # Vertical
+            cells[f"num{i + 6}"][0] = pc_figure
+            print("Block 1")
+            pc_moved = True
+            return
+        elif cells[f"num{i + 3}"][0] == cells[f"num{i + 6}"][0] == figure and cells[f"num{i}"][0] == " ":
+            cells[f"num{i}"][0] = pc_figure
+            print("Move 2")
+            pc_moved = True
+            return
+        elif cells[f"num{i}"][0] == cells[f"num{i + 6}"][0] == figure and cells[f"num{i + 3}"][0] == " ":
+            cells[f"num{i}"][0] = pc_figure
+            print("Move 3")
+            pc_moved = True
+            return
+
+        elif cells[f"num{i}"][0] == cells[f"num{i + 1}"][0] == figure and cells[f"num{i + 2}"][0] == " ":  # Horizontal
+            cells[f"num{i + 6}"][0] = pc_figure
+            print("Block 4")
+            pc_moved = True
+            return
+        elif cells[f"num{i + 2}"][0] == cells[f"num{i + 1}"][0] == figure and cells[f"num{i}"][0] == " ":
+            cells[f"num{i}"][0] = pc_figure
+            print("Block 5")
+            pc_moved = True
+            return
+        elif cells[f"num{i}"][0] == cells[f"num{i + 1}"][0] == figure and cells[f"num{i + 2}"][0] == " ":
+            cells[f"num{i}"][0] = pc_figure
+            print("Block 6")
+            pc_moved = True
+            return
+
+        elif cells[f"num{i}"][0] == cells[f"num{i + 4}"][0] == figure and cells[f"num{i + 7}"][0] == " ":  # Diagonal
+            cells[f"num{i + 6}"][0] = pc_figure
+            print("Block 7")
+            pc_moved = True
+            return
+        elif cells[f"num{i + 2}"][0] == cells[f"num{i + 4}"][0] == figure and cells[f"num{i}"][0] == " ":
+            cells[f"num{i}"][0] = pc_figure
+            print("Block 8")
+            pc_moved = True
+            return
+
+
+def pc_move():
+    global pc_moved
+    print("Moving pc")
+    check_pc_move()
+
+    if not pc_moved:
+        while True:
+            choice = randint(1, 9)
+            if cells[f"num{choice}"][0] == " ":
+                cells[f"num{choice}"][0] = pc_figure
+                print("Random")
+                return
+    pc_moved = False
 
 
 def pick_figure():
@@ -172,32 +254,26 @@ while True:
     print("Вітаю в грі \"Хрестики нулики\"!")
     sleep(0.5)
     print(f"\nВ грі можна грати з комп'ютером або вдвох.\n\nПравила прості:\nВи вводите номер клітини в яку хочете "
-          f"поставити свою фігуру (1 - 9 або 7 - 3)")
+          f"поставити свою фігуру (NumPad 7 - 3)")
     input("Натисніть Enter щоб продовжити...")
 
-    # numpad = input("Виберіть режим:\n1 - NumPad\n2 - Числовий рядок\n")
-    # numpad = True if numpad == '1' else False if numpad == '2' else None
-    # while numpad is None:
-    #     numpad = input("Невірний вибір! Будь ласка, введіть 1 або 2.")
-    #     numpad = True if numpad == '1' else False if numpad == '2' else None
-    # sleep(0.5)
-
-    gamemode = int(input("Виберіть режим гри:\nВдвох - 1\nЗ комп'ютером - 2\n"))
-    while 1 != gamemode != 2:
+    gamemode = input("Виберіть режим гри:\nВдвох - 1\nЗ комп'ютером - 2\n")
+    while "1" != gamemode != "2":
         gamemode = input("Введіть 1 або 2!")
     sleep(0.5)
+    render_field()
 
-    while gamemode == 1:
-        render_field()
+    while gamemode == "1":
         player_move()
         check_win()
+        render_field()
         change_player()
 
-    while gamemode == 2:
+    while gamemode == "2":
         if figure is not None:
-            render_field()
             changing_logic()
             check_win()
+            render_field()
             change_player()
         else:
             pick_figure()
