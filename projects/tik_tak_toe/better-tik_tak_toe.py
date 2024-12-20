@@ -40,11 +40,11 @@ draws = 0
 
 def write_in_file():
     with open("logs.txt", "a") as file:
-        file.write(f'[{current_time}] Wins X: {x_wins}. Wins O: {o_wins}. Draws: {draws}.   Gamemode: {"PvP" if gamemode == "end_1" else f"PvC.    Player: {figure}"}\n')
+        file.write(
+            f'[{current_time}] Wins X: {x_wins}. Wins O: {o_wins}. Draws: {draws}.   Gamemode: {"PvP" if gamemode == "end_1" else f"PvC.    Player: {figure}"}\n')
 
 
 def render_field():
-    print("Rendering field")
     print(f" {cells['num7'][0]} | {cells['num8'][0]} | {cells['num9'][0]} ")
     print("___|___|___")
     print(f" {cells['num4'][0]} | {cells['num5'][0]} | {cells['num6'][0]} ")
@@ -53,9 +53,7 @@ def render_field():
     print("   |   |   \n")
 
 
-
 def change_player():
-    print("Changing player")
     global player_now
     if player_now == "X":
         player_now = "O"
@@ -64,7 +62,6 @@ def change_player():
 
 
 def check_win():
-    print("Checking win")
     global player_now, win, cells, gamemode
     winning_combinations = [
         [cells["num7"], cells["num8"], cells["num9"]],  # Top row
@@ -100,7 +97,6 @@ def check_win():
 
 
 def player_move():
-    print("Moving player")
     while True:
         try:
             choice = int(
@@ -126,95 +122,79 @@ def check_pc_move():
         # Moves
         if cells[f"num{i}"][0] == cells[f"num{i + 3}"][0] == pc_figure and cells[f"num{i + 6}"][0] == " ":  # Vertical
             cells[f"num{i + 6}"][0] = pc_figure
-            print("Move 1")
             pc_moved = True
             return
         elif cells[f"num{i + 3}"][0] == cells[f"num{i + 6}"][0] == pc_figure and cells[f"num{i}"][0] == " ":
             cells[f"num{i}"][0] = pc_figure
-            print("Move 2")
             pc_moved = True
             return
         elif cells[f"num{i}"][0] == cells[f"num{i + 6}"][0] == pc_figure and cells[f"num{i + 3}"][0] == " ":
             cells[f"num{i}"][0] = pc_figure
-            print("Move 3")
             pc_moved = True
             return
 
-        elif cells[f"num{i}"][0] == cells[f"num{i + 2}"][0] == pc_figure and cells[f"num{i + 5}"][0] == " ":   # Horizontal
+        elif cells[f"num{i}"][0] == cells[f"num{i + 2}"][0] == pc_figure and cells[f"num{i + 5}"][
+            0] == " ":  # Horizontal
             cells[f"num{i + 6}"][0] = pc_figure
-            print("Move 4")
             pc_moved = True
             return
         elif cells[f"num{i + 2}"][0] == cells[f"num{i + 5}"][0] == pc_figure and cells[f"num{i}"][0] == " ":
             cells[f"num{i}"][0] = pc_figure
-            print("Move 5")
             pc_moved = True
             return
         elif cells[f"num{i}"][0] == cells[f"num{i + 5}"][0] == pc_figure and cells[f"num{i + 2}"][0] == " ":
             cells[f"num{i}"][0] = pc_figure
-            print("Move 6")
             pc_moved = True
             return
 
-        elif cells[f"num{i}"][0] == cells[f"num{i + 4}"][0] == pc_figure and cells[f"num{i + 7}"][0] == " ":   # Diagonal
+        elif cells[f"num{i}"][0] == cells[f"num{i + 4}"][0] == pc_figure and cells[f"num{i + 7}"][0] == " ":  # Diagonal
             cells[f"num{i + 6}"][0] = pc_figure
-            print("Move 7")
             pc_moved = True
             return
         elif cells[f"num{i + 2}"][0] == cells[f"num{i + 4}"][0] == pc_figure and cells[f"num{i}"][0] == " ":
             cells[f"num{i}"][0] = pc_figure
-            print("Move 8")
             pc_moved = True
             return
 
         # Blocks
         elif cells[f"num{i}"][0] == cells[f"num{i + 3}"][0] == figure and cells[f"num{i + 6}"][0] == " ":  # Vertical
             cells[f"num{i + 6}"][0] = pc_figure
-            print("Block 1")
             pc_moved = True
             return
         elif cells[f"num{i + 3}"][0] == cells[f"num{i + 6}"][0] == figure and cells[f"num{i}"][0] == " ":
             cells[f"num{i}"][0] = pc_figure
-            print("Move 2")
             pc_moved = True
             return
         elif cells[f"num{i}"][0] == cells[f"num{i + 6}"][0] == figure and cells[f"num{i + 3}"][0] == " ":
             cells[f"num{i}"][0] = pc_figure
-            print("Move 3")
             pc_moved = True
             return
 
         elif cells[f"num{i}"][0] == cells[f"num{i + 1}"][0] == figure and cells[f"num{i + 2}"][0] == " ":  # Horizontal
             cells[f"num{i + 6}"][0] = pc_figure
-            print("Block 4")
             pc_moved = True
             return
         elif cells[f"num{i + 2}"][0] == cells[f"num{i + 1}"][0] == figure and cells[f"num{i}"][0] == " ":
             cells[f"num{i}"][0] = pc_figure
-            print("Block 5")
             pc_moved = True
             return
         elif cells[f"num{i}"][0] == cells[f"num{i + 1}"][0] == figure and cells[f"num{i + 2}"][0] == " ":
             cells[f"num{i}"][0] = pc_figure
-            print("Block 6")
             pc_moved = True
             return
 
         elif cells[f"num{i}"][0] == cells[f"num{i + 4}"][0] == figure and cells[f"num{i + 7}"][0] == " ":  # Diagonal
             cells[f"num{i + 6}"][0] = pc_figure
-            print("Block 7")
             pc_moved = True
             return
         elif cells[f"num{i + 2}"][0] == cells[f"num{i + 4}"][0] == figure and cells[f"num{i}"][0] == " ":
             cells[f"num{i}"][0] = pc_figure
-            print("Block 8")
             pc_moved = True
             return
 
 
 def pc_move():
     global pc_moved
-    print("Moving pc")
     check_pc_move()
 
     if not pc_moved:
