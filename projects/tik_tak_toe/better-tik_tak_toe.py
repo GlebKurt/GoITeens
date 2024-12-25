@@ -89,8 +89,11 @@ def check_win():
     if win:
         choice = input("Ви бажаєте зіграти ще раз?").lower()
         if choice == "так":
-            cells = {key: [" ", value[1]] for key, value in cells.items()}  # Так зробити мені підказав ChatGPT
+            cells = {key: [" ", value[1]] for key, value in cells.items()}
+            player_now = "X"
             win = False
+            stats.clear()
+            render_field()
         else:
             gamemode = "end_1" if gamemode == "1" else "end_2"
 
@@ -198,10 +201,11 @@ def pc_move():
 
     if not pc_moved:
         while True:
-            choice = randint(1, 9)
-            if cells[f"num{choice}"][0] == " ":
-                cells[f"num{choice}"][0] = pc_figure
-                return
+            choice = f"num{randint(1, 9)}"
+            if cells[choice][0] == " ":
+                cells[choice][0] = pc_figure
+                pc_moved = True
+                break
     pc_moved = False
 
 
@@ -251,7 +255,6 @@ while True:
         if figure is not None:
             changing_logic()
             check_win()
-            render_field()
             change_player()
         else:
             pick_figure()
