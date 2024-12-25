@@ -40,8 +40,7 @@ draws = 0
 
 def write_in_file():
     with open("logs.txt", "a") as file:
-        file.write(
-            f'[{current_time}] Wins X: {x_wins}. Wins O: {o_wins}. Draws: {draws}.   Gamemode: {"PvP" if gamemode == "end_1" else f"PvC.    Player: {figure}"}\n')
+        file.write(f'[{current_time}] Wins X: {x_wins}. Wins O: {o_wins}. Draws: {draws}.   Gamemode: {"PvP" if gamemode == "end_1" else f"PvC.    Player: {figure}"}\n')
 
 
 def render_field():
@@ -202,7 +201,6 @@ def pc_move():
             choice = randint(1, 9)
             if cells[f"num{choice}"][0] == " ":
                 cells[f"num{choice}"][0] = pc_figure
-                print("Random")
                 return
     pc_moved = False
 
