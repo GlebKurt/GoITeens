@@ -92,7 +92,6 @@ def check_win():
             cells = {key: [" ", value[1]] for key, value in cells.items()}
             player_now = "X"
             win = False
-            stats.clear()
             render_field()
         else:
             gamemode = "end_1" if gamemode == "1" else "end_2"
@@ -102,7 +101,7 @@ def player_move():
     while True:
         try:
             choice = int(
-                input(f"Зараз ходить {player_now}!\nВиберіть клітину {"(NumPad 7-3)" if numpad else "(1-9)"}: \n"))
+                input(f"Зараз ходить {player_now}!\nВиберіть клітину {'(NumPad 7-3)' if numpad else '(1-9)'}: \n"))
         except ValueError:
             print("Будь ласка, введіть число.")
             continue
@@ -118,94 +117,32 @@ def player_move():
             print("Невірний вибір! Виберіть число від 1 до 9.")
 
 
-def check_pc_move():
+def pc_move(): # Я вже не знав що робити, і запитав у чата гпт. Я наче зрозумів логіку цієї функції як він її написав
     global pc_moved
-    for i in range(1, 4):
-        # Moves
-        if cells[f"num{i}"][0] == cells[f"num{i + 3}"][0] == pc_figure and cells[f"num{i + 6}"][0] == " ":  # Vertical
-            cells[f"num{i + 6}"][0] = pc_figure
+    for combo in [
+        ["num7", "num8", "num9"], ["num4", "num5", "num6"], ["num1", "num2", "num3"],
+        ["num7", "num4", "num1"], ["num8", "num5", "num2"], ["num9", "num6", "num3"],
+        ["num7", "num5", "num3"], ["num9", "num5", "num1"]
+    ]:
+        line = [cells[pos][0] for pos in combo]
+        if line.count(pc_figure) == 2 and line.count(" ") == 1:
+            cells[combo[line.index(" ")]][0] = pc_figure
             pc_moved = True
+            render_field()
             return
-        elif cells[f"num{i + 3}"][0] == cells[f"num{i + 6}"][0] == pc_figure and cells[f"num{i}"][0] == " ":
-            cells[f"num{i}"][0] = pc_figure
+        if line.count(figure) == 2 and line.count(" ") == 1:
+            cells[combo[line.index(" ")]][0] = pc_figure
             pc_moved = True
-            return
-        elif cells[f"num{i}"][0] == cells[f"num{i + 6}"][0] == pc_figure and cells[f"num{i + 3}"][0] == " ":
-            cells[f"num{i}"][0] = pc_figure
-            pc_moved = True
-            return
-
-        elif cells[f"num{i}"][0] == cells[f"num{i + 2}"][0] == pc_figure and cells[f"num{i + 5}"][
-            0] == " ":  # Horizontal
-            cells[f"num{i + 6}"][0] = pc_figure
-            pc_moved = True
-            return
-        elif cells[f"num{i + 2}"][0] == cells[f"num{i + 5}"][0] == pc_figure and cells[f"num{i}"][0] == " ":
-            cells[f"num{i}"][0] = pc_figure
-            pc_moved = True
-            return
-        elif cells[f"num{i}"][0] == cells[f"num{i + 5}"][0] == pc_figure and cells[f"num{i + 2}"][0] == " ":
-            cells[f"num{i}"][0] = pc_figure
-            pc_moved = True
+            render_field()
             return
 
-        elif cells[f"num{i}"][0] == cells[f"num{i + 4}"][0] == pc_figure and cells[f"num{i + 7}"][0] == " ":  # Diagonal
-            cells[f"num{i + 6}"][0] = pc_figure
+    while not pc_moved:
+        choice = f"num{randint(1, 9)}"
+        if cells[choice][0] == " ":
+            cells[choice][0] = pc_figure
             pc_moved = True
-            return
-        elif cells[f"num{i + 2}"][0] == cells[f"num{i + 4}"][0] == pc_figure and cells[f"num{i}"][0] == " ":
-            cells[f"num{i}"][0] = pc_figure
-            pc_moved = True
-            return
-
-        # Blocks
-        elif cells[f"num{i}"][0] == cells[f"num{i + 3}"][0] == figure and cells[f"num{i + 6}"][0] == " ":  # Vertical
-            cells[f"num{i + 6}"][0] = pc_figure
-            pc_moved = True
-            return
-        elif cells[f"num{i + 3}"][0] == cells[f"num{i + 6}"][0] == figure and cells[f"num{i}"][0] == " ":
-            cells[f"num{i}"][0] = pc_figure
-            pc_moved = True
-            return
-        elif cells[f"num{i}"][0] == cells[f"num{i + 6}"][0] == figure and cells[f"num{i + 3}"][0] == " ":
-            cells[f"num{i}"][0] = pc_figure
-            pc_moved = True
-            return
-
-        elif cells[f"num{i}"][0] == cells[f"num{i + 1}"][0] == figure and cells[f"num{i + 2}"][0] == " ":  # Horizontal
-            cells[f"num{i + 6}"][0] = pc_figure
-            pc_moved = True
-            return
-        elif cells[f"num{i + 2}"][0] == cells[f"num{i + 1}"][0] == figure and cells[f"num{i}"][0] == " ":
-            cells[f"num{i}"][0] = pc_figure
-            pc_moved = True
-            return
-        elif cells[f"num{i}"][0] == cells[f"num{i + 1}"][0] == figure and cells[f"num{i + 2}"][0] == " ":
-            cells[f"num{i}"][0] = pc_figure
-            pc_moved = True
-            return
-
-        elif cells[f"num{i}"][0] == cells[f"num{i + 4}"][0] == figure and cells[f"num{i + 7}"][0] == " ":  # Diagonal
-            cells[f"num{i + 6}"][0] = pc_figure
-            pc_moved = True
-            return
-        elif cells[f"num{i + 2}"][0] == cells[f"num{i + 4}"][0] == figure and cells[f"num{i}"][0] == " ":
-            cells[f"num{i}"][0] = pc_figure
-            pc_moved = True
-            return
-
-
-def pc_move():
-    global pc_moved
-    check_pc_move()
-
-    if not pc_moved:
-        while True:
-            choice = f"num{randint(1, 9)}"
-            if cells[choice][0] == " ":
-                cells[choice][0] = pc_figure
-                pc_moved = True
-                break
+            render_field()
+            break
     pc_moved = False
 
 
@@ -255,6 +192,7 @@ while True:
         if figure is not None:
             changing_logic()
             check_win()
+            render_field()
             change_player()
         else:
             pick_figure()

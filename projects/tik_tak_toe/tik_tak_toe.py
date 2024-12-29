@@ -1,10 +1,20 @@
-import time
+from time import sleep
 from random import randint
-from datetime import datetime  # Знайшов в інтернеті. Для того щоб зберігати дату і час у файл з логами, бо так прикольно виглядає, наче професійна програма)
+from datetime import datetime
 
-cells_1 = [" ", " ", " "]
-cells_2 = [" ", " ", " "]
-cells_3 = [" ", " ", " "]
+cells = {
+    "num7": [" ", 7],
+    "num8": [" ", 8],
+    "num9": [" ", 9],
+
+    "num4": [" ", 4],
+    "num5": [" ", 5],
+    "num6": [" ", 6],
+
+    "num1": [" ", 1],
+    "num2": [" ", 2],
+    "num3": [" ", 3]
+}
 
 stats = []
 
@@ -13,12 +23,15 @@ win = False
 gamemode_1 = False
 gamemode_2 = False
 is_pc_move = False
+pc_moved = False
 
 player_now = "X"
 choice = None
 pc_figure = None
+figure = None
+current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Допомагав ChatGPT, але писав сам
+numpad = True
 
 x_wins = 0
 o_wins = 0
@@ -27,15 +40,16 @@ draws = 0
 
 def write_in_file():
     with open("logs.txt", "a") as file:
-        file.write(f'[{current_time}] Wins X: {x_wins}. Wins O: {o_wins}. Draws: {draws}.   Gamemode: {"PvP" if gamemode_1 == True else "PvC."   "Player": {figure}}\n')
+        file.write(f'[{current_time}] Wins X: {x_wins}. Wins O: {o_wins}. Draws: {draws}.   Gamemode: {"PvP" if gamemode == "end_1" else f"PvC.    Player: {figure}"}\n')
 
 
 def render_field():
-    print(f"{cells_1[0]} | {cells_1[1]} | {cells_1[2]}")
-    print("---------")
-    print(f"{cells_2[0]} | {cells_2[1]} | {cells_2[2]}")
-    print("---------")
-    print(f"{cells_3[0]} | {cells_3[1]} | {cells_3[2]}\n")
+    print(f" {cells['num7'][0]} | {cells['num8'][0]} | {cells['num9'][0]} ")
+    print("___|___|___")
+    print(f" {cells['num4'][0]} | {cells['num5'][0]} | {cells['num6'][0]} ")
+    print("___|___|___")
+    print(f" {cells['num1'][0]} | {cells['num2'][0]} | {cells['num3'][0]} ")
+    print("   |   |   \n")
 
 
 def change_player():
@@ -47,185 +61,130 @@ def change_player():
 
 
 def check_win():
-    global player_now, win
-    winning_combinations = [  # Зробити таким способом мені підказав ChatGPT
-        [cells_1[0], cells_1[1], cells_1[2]],
-        [cells_2[0], cells_2[1], cells_2[2]],
-        [cells_3[0], cells_3[1], cells_3[2]],
+    global player_now, win, cells, gamemode
+    winning_combinations = [
+        [cells["num7"], cells["num8"], cells["num9"]],  # Top row
+        [cells["num4"], cells["num5"], cells["num6"]],  # Middle row
+        [cells["num1"], cells["num2"], cells["num3"]],  # Bottom row
 
-        [cells_1[0], cells_2[0], cells_3[0]],
-        [cells_1[1], cells_2[1], cells_3[1]],
-        [cells_1[2], cells_2[2], cells_3[2]],
+        [cells["num7"], cells["num4"], cells["num1"]],  # Left column
+        [cells["num8"], cells["num5"], cells["num2"]],  # Middle column
+        [cells["num9"], cells["num6"], cells["num3"]],  # Right column
 
-        [cells_1[0], cells_2[1], cells_3[2]],
-        [cells_1[2], cells_2[1], cells_3[0]]
+        [cells["num7"], cells["num5"], cells["num3"]],  # Diagonal
+        [cells["num9"], cells["num5"], cells["num1"]]  # Diagonal
     ]
 
     for combination in winning_combinations:
-        if combination[0] == combination[1] == combination[2] == player_now:
+        if combination[0][0] == combination[1][0] == combination[2][0] == player_now:
             stats.append(player_now)
             print(f"{player_now} виграв!")
             win = True
-            return
 
-    if all(cell != " " for row in [cells_1, cells_2, cells_3] for cell in row):
+    if all(cell[0] != " " for cell in cells.values()):
         stats.append("draw")
-        print(f"Нічия!")
+        print("Нічия!")
         win = True
+
+    if win:
+        choice = input("Ви бажаєте зіграти ще раз?").lower()
+        if choice == "так":
+            cells = {key: [" ", value[1]] for key, value in cells.items()}
+            player_now = "X"
+            win = False
+            stats.clear()
+            render_field()
+        else:
+            gamemode = "end_1" if gamemode == "1" else "end_2"
+
+
+def player_move():
+    while True:
+        try:
+            choice = int(
+                input(f"Зараз ходить {player_now}!\nВиберіть клітину {'(NumPad 7-3)' if numpad else '(1-9)'}: \n"))
+        except ValueError:
+            print("Будь ласка, введіть число.")
+            continue
+
+        if 1 <= choice <= 9:
+            if cells[f"num{choice}"][0] == " ":
+                cells[f"num{choice}"][0] = player_now
+                render_field()
+                break
+            else:
+                print("\nЦя клітина вже зайнята, виберіть іншу.\n")
+        else:
+            print("Невірний вибір! Виберіть число від 1 до 9.")
 
 
 def pc_move():
-    for i in range(3):
-        if cells_1[i] == cells_2[i] == pc_figure and cells_3[i] == " ":
-            cells_3[i] = pc_figure
-            print("1")
-            return
-        elif cells_2[i] == cells_3[i] == pc_figure and cells_1[i] == " ":
-            cells_1[i] = pc_figure
-            print("2")
-            return
-        elif cells_1[i] == cells_3[i] == pc_figure and cells_2[i] == " ":
-            cells_2[i] = pc_figure
-            print("3")
-            return
-
     while True:
-        choice = randint(1, 9)
-
-        if choice in range(1, 4) and cells_1[choice - 1] == " ":
-            cells_1[choice - 1] = pc_figure
-            print("Random 1")
-            return
-        elif choice in range(4, 7) and cells_2[choice - 4] == " ":
-            cells_2[choice - 4] = pc_figure
-            print("Random 2")
-            return
-        elif choice in range(7, 10) and cells_3[choice - 7] == " ":
-            cells_3[choice - 7] = pc_figure
-            print("Random 3")
-            return
+        choice = f"num{randint(1, 9)}"
+        if cells[choice][0] == " ":
+            cells[choice][0] = pc_figure
+            print('Random move')
+            break
 
 
-print("Вітаю в грі \"Хрестики нулики\"!")
-time.sleep(1)
-print(f"\nВ грі можна грати з комп'ютером або вдвох.\n\nПравила прості:\nВи вводите номер клітини в яку хочете "
-      f"поставити свою фігуру (1 - 9)")
-input("Натисніть Enter щоб продовжити...")
+def pick_figure():
+    global figure, pc_figure
+    figure = input("Виберіть фігуру (X, O)").upper()
+
+    if figure == "X":
+        pc_figure = "O"
+    else:
+        pc_figure = "X"
+
+    while "X" != figure != "O":
+        figure = input("Введіть X або O!").upper()
+    sleep(0.5)
+
+
+def changing_logic():
+    if player_now == figure:
+        player_move()
+    else:
+        pc_move()
+
 
 while True:
     if win: break
 
-    game_running = True
+    print("Вітаю в грі \"Хрестики нулики\"!")
+    sleep(0.5)
+    print(f"\nВ грі можна грати з комп'ютером або вдвох.\n\nПравила прості:\nВи вводите номер клітини в яку хочете "
+          f"поставити свою фігуру (NumPad 7 - 3)")
+    input("Натисніть Enter щоб продовжити...")
 
-    while True:
-        gamemode = input("Виберіть режим гри:\nВдвох - 1\nЗ комп'ютером - 2\n")
-        if gamemode == "1":
-            game_running = True
-            gamemode_1 = True
-        elif gamemode == "2":
-            game_running = True
-            gamemode_2 = True
+    gamemode = input("Виберіть режим гри:\nВдвох - 1\nЗ комп'ютером - 2\n")
+    while "1" != gamemode != "2":
+        gamemode = input("Введіть 1 або 2!")
+    sleep(0.5)
+    render_field()
+
+    while gamemode == "1":
+        player_move()
+        check_win()
+        render_field()
+        change_player()
+
+    while gamemode == "2":
+        if figure is not None:
+            changing_logic()
+            check_win()
+            render_field()
+            change_player()
         else:
-            print("Введене не коректне значення!")
+            pick_figure()
 
-        while gamemode_1:
-            if win: break
+for wins in stats:
+    if wins == "X":
+        x_wins += 1
+    elif wins == "O":
+        o_wins += 1
+    elif wins == "draw":
+        draws += 1
 
-            render_field()
-            while True:
-                time.sleep(1)
-                while True:
-                    choice = int(input(f"Зараз ходить {player_now}!\nВиберіть клітину (1-9): \n"))
-
-                    if choice in range(1, 4) and cells_1[choice - 1] == " ":
-                        cells_1[choice - 1] = player_now
-                        break
-                    elif choice in range(4, 7) and cells_2[choice - 4] == " ":
-                        cells_2[choice - 4] = player_now
-                        break
-                    elif choice in range(7, 10) and cells_3[choice - 7] == " ":
-                        cells_3[choice - 7] = player_now
-                        break
-                    else:
-                        print("\nЦя клітина вже зайнята, виберіть іншу.\n")
-
-                    render_field()
-
-                render_field()
-                check_win()
-
-                if win:
-                    choice = input("Ви бажаєте зіграти ще раз?").lower()
-                    if choice == "так":
-                        cells_1 = [" ", " ", " "]
-                        cells_2 = [" ", " ", " "]
-                        cells_3 = [" ", " ", " "]
-                        win = False
-                        continue
-                    else:
-                        break
-
-                change_player()
-
-        while gamemode_2:
-            if win: break
-
-            time.sleep(1)
-            while True:
-                figure = input("Введіть цифру що відповідає фігурі:\nХ - 1\nO - 2\n")
-                if figure == "1":
-                    figure = "X"
-                    pc_figure = "O"
-                    break
-                elif figure == "2":
-                    figure = "O"
-                    pc_figure = "X"
-                    break
-                else:
-                    print('Ви ввели не коректний номер!')
-
-            time.sleep(1)
-            render_field()
-            while True:
-                if player_now == figure:
-                    choice = int(input(f"Зараз ходить {player_now}!\nВиберіть клітину (1-9): \n"))
-                    if choice in range(1, 4) and cells_1[choice - 1] == " ":
-                        cells_1[choice - 1] = player_now
-                    elif choice in range(4, 7) and cells_2[choice - 4] == " ":
-                        cells_2[choice - 4] = player_now
-                    elif choice in range(7, 10) and cells_3[choice - 7] == " ":
-                        cells_3[choice - 7] = player_now
-                    else:
-                        print("\nЦя клітина вже зайнята, виберіть іншу.\n")
-                        continue
-                elif player_now == pc_figure:
-                    print(f"Зараз ходить {pc_figure} (комп'ютер)!")
-                    pc_move()
-
-                render_field()
-                check_win()
-
-                if win:
-                    choice = input("Ви бажаєте зіграти ще раз?").lower()
-                    if choice == "так":
-                        cells_1 = [" ", " ", " "]
-                        cells_2 = [" ", " ", " "]
-                        cells_3 = [" ", " ", " "]
-                        win = False
-                        continue
-                    else:
-                        break
-
-                change_player()
-
-        for wins in stats:
-            if wins == "X":
-                x_wins += 1
-            elif wins == "O":
-                o_wins += 1
-            elif wins == "draw":
-                draws += 1
-
-        print(f"Статистика гри:\nВиграшів Х: {x_wins}\nВиграшів О: {o_wins}\nНічий: {draws}")
-        write_in_file()
-        break
+print(f"Статистика гри:\nВиграшів Х: {x_wins}\nВиграшів О: {o_wins}\nНічий: {draws}")
+write_in_file()
